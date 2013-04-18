@@ -11,21 +11,21 @@ def log_files(log_file):
     """list of rotated log files"""
     return glob(log_file + "*")
 
-total_count = 0
-for l in log_files(log_path):
+def opener(filename):
     if l.endswith(".gz"):
         o = gzip.open
     else:
         o = open
-    with o(l, "rb") as f:
+    return o(filename,"rb")
+
+
+total_count = 0
+for l in log_files(log_path):
+    with opener(l) as f:
         total_count += len(f.readlines())
 print total_count
 
 for l in log_files(log_path):
-    if l.endswith(".gz"):
-        o = gzip.open
-    else:
-        o = open
-    with o(l, "rb") as f:
+    with opener(l) as f:
         print l, len(f.readlines())
 
